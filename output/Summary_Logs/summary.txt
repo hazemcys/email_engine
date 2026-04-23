@@ -1,0 +1,6 @@
+🔥 TOTAL EMAILS DESTROYED: 1966
+Stage 1 (Spammers):     1093
+Stage 2 (Legal stuff):  26
+Stage 3 (Reports):      622
+Stage 4 (Leftovers):    73
+Stage 5 (Useless bins): 152

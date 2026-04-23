@@ -1,0 +1,6 @@
+total emails processed: 1966
+stage1 (most occurred): 1093
+stage2 (legal keywords): 26
+stage3 (report entries): 622
+stage4 (detected phones): 73
+stage5 (unprocessed): 152
