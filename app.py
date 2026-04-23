@@ -103,7 +103,7 @@ with st.sidebar:
     enable_ai = st.checkbox("Enable AI Classification", value=False, help="Uses Gemini AI to categorize emails (real_user, ad, etc.)")
     spam_val = st.number_input("Spam Threshold", min_value=1, value=5, help="Number of occurrences to flag a sender in Stage 1")
 
-uploaded_file = st.sidebar.file_uploader("Upload MBOX File", type=None)
+uploaded_file = st.file_uploader("Upload MBOX File", type=None)
 
 temp_path = "temp_data.mbox"
 
