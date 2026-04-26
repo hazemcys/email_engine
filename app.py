@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from engine import load_and_parse, write_outputs
+from engine import load_and_parse, load_from_csv, write_outputs
 from classifier import run_ai_classification
 import plotly.express as px
 import os
@@ -95,7 +95,7 @@ except ImportError:
         return f"<h3>Stage {stage_num}</h3>"
 
 st.title("🚀 Email Categorization Engine")
-st.write("Upload Your MBOX File To Start The Classification.")
+st.write("Upload Your MBOX or CSV File To Start The Classification.")
 
 # UI Settings for AI
 with st.sidebar:
@@ -103,7 +103,7 @@ with st.sidebar:
     enable_ai = st.checkbox("Enable AI Classification", value=False, help="Uses Gemini AI to categorize emails (real_user, ad, etc.)")
     spam_val = st.number_input("Spam Threshold", min_value=1, value=5, help="Number of occurrences to flag a sender in Stage 1")
 
-uploaded_file = st.file_uploader("Upload MBOX File", type=None)
+uploaded_file = st.file_uploader("Upload Data File", type=["mbox", "csv"])
 
 temp_path = "temp_data.mbox"
 
@@ -113,8 +113,11 @@ if uploaded_file is not None:
             with open(temp_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
 
-            # 1. Core Parsing
-            all_rows, phone_tracker = load_and_parse(temp_path)
+            # 1. Core Parsing (MBOX or CSV)
+            if uploaded_file.name.lower().endswith(".csv"):
+                all_rows, phone_tracker = load_from_csv(temp_path)
+            else:
+                all_rows, phone_tracker = load_and_parse(temp_path)
             
             # 2. Optional AI Classification
             if all_rows and enable_ai:
@@ -139,7 +142,7 @@ if uploaded_file is not None:
 
             # 3. Pipeline Filtering
             if not all_rows:
-                st.error("❌ No emails found! Please ensure you uploaded a valid **MBOX** file (CSV files are not supported).")
+                st.error("❌ No data found! Please ensure you uploaded a valid **MBOX** or **CSV** file with standard headers.")
                 if 'all_results' in st.session_state:
                     del st.session_state['all_results']
             else:

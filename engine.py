@@ -215,6 +215,63 @@ def load_and_parse(mbox_path):
     return all_parsed_rows, phone_tracker
 
 
+def load_from_csv(csv_path):
+    try:
+        # Some CSVs might use semicolon or tab, but comma is standard. 
+        # We try to be a bit flexible here.
+        df = pd.read_csv(csv_path)
+    except Exception as err:
+        print(f"Yikes, couldn't open the CSV file: {err}")
+        return [], Counter()
+
+    all_parsed_rows = []
+    phone_tracker = Counter()
+
+    # Smart mapping: We look for columns that match our expected fields in Arabic and English!
+    col_map = {
+        'sender_id':    ['sender_id', 'sender', 'from', 'المرسل', 'من'],
+        'sender_email': ['sender_email', 'email', 'البريد', 'بريد'],
+        'title':        ['title', 'subject', 'الموضوع', 'عنوان'],
+        'body':         ['body', 'content', 'text', 'المحتوى', 'النص']
+    }
+
+    def find_col(possible_names):
+        for name in possible_names:
+            for col in df.columns:
+                if str(col).lower().strip() == name.lower():
+                    return col
+        return None
+
+    mapped_cols = {k: find_col(v) for k, v in col_map.items()}
+
+    print(f"📊 CSV columns mapped: {mapped_cols}")
+
+    for _, row in df.iterrows():
+        from_raw = str(row.get(mapped_cols['sender_id'], '')) if mapped_cols['sender_id'] else ''
+        pure_email = str(row.get(mapped_cols['sender_email'], '')) if mapped_cols['sender_email'] else ''
+        
+        # If pure_email is missing but from_raw has an email pattern, snag it!
+        if not pure_email and from_raw:
+            m = re.search(r'[\w.\-+]+@[\w.\-]+\.\w+', from_raw)
+            pure_email = m.group(0) if m else ''
+
+        subj = fix_numbers(str(row.get(mapped_cols['title'], ''))) if mapped_cols['title'] else ''
+        body_txt = fix_numbers(str(row.get(mapped_cols['body'], ''))) if mapped_cols['body'] else ''
+
+        detected_phones = pull_phones(subj + ' ' + body_txt)
+        phone_tracker.update(detected_phones)
+
+        all_parsed_rows.append({
+            'sender_id': from_raw,
+            'sender_email': pure_email,
+            'title': subj,
+            'body': body_txt,
+            'phones': detected_phones
+        })
+
+    return all_parsed_rows, phone_tracker
+
+
 def write_outputs(outdir, all_rows, phone_tracker, spam_threshold):
     # Setting up our output folders nice and neat!
     xl_dir   = os.path.join(outdir, 'Excel_Reports')
