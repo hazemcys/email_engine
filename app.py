@@ -117,7 +117,7 @@ if uploaded_file is not None:
             all_rows, phone_tracker = load_and_parse(temp_path)
             
             # 2. Optional AI Classification
-            if enable_ai:
+            if all_rows and enable_ai:
                 st.info("🧠 AI Classification active. Processing in batches...")
                 batch_size = 20
                 ai_failed = False
@@ -138,9 +138,22 @@ if uploaded_file is not None:
                     time.sleep(0.5)
 
             # 3. Pipeline Filtering
-            write_outputs("output", all_rows, phone_tracker, spam_threshold=spam_val)
-            st.session_state['all_results'] = pd.DataFrame(all_rows)
-            st.success("Done! Emails classified successfully.")
+            if not all_rows:
+                st.error("❌ No emails found! Please ensure you uploaded a valid **MBOX** file (CSV files are not supported).")
+                if 'all_results' in st.session_state:
+                    del st.session_state['all_results']
+            else:
+                write_outputs("output", all_rows, phone_tracker, spam_threshold=spam_val)
+                
+                # Create DataFrame and ensure all expected columns exist to prevent KeyErrors
+                df = pd.DataFrame(all_rows)
+                expected_cols = ['sender_id', 'sender_email', 'title', 'body', 'phones', 'stage', 'category', 'report_name', 'report_phone']
+                for col in expected_cols:
+                    if col not in df.columns:
+                        df[col] = None
+                
+                st.session_state['all_results'] = df
+                st.success("✅ Done! Emails classified successfully.")
 
     if 'all_results' in st.session_state:
         all_results = st.session_state['all_results']

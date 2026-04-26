@@ -98,7 +98,7 @@ _numtable = str.maketrans(_AR, _EN)
 
 def fix_numbers(s):
     if not s: return ""
-    return s.translate(_numtable)
+    return str(s).translate(_numtable)
 
 # phone regex - tried lookahead before but caused issues on some mbox files
 def pull_phones(txt):
@@ -211,6 +211,7 @@ def load_and_parse(mbox_path):
             'phones': detected_phones
         })
 
+    engine_mailbox.close()
     return all_parsed_rows, phone_tracker
 
 
@@ -393,6 +394,10 @@ def main():
             chunk = all_rows[i : i + batch_size]
             results = run_ai_classification(chunk)
             
+            if results and results[0] == "RATE_LIMIT_HIT":
+                print("⚠️ AI Rate Limit Hit! Continuing without AI.")
+                break
+
             for j, category in enumerate(results):
                 if i + j < len(all_rows):
                     all_rows[i + j]['category'] = category
