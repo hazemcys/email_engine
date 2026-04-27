@@ -4,7 +4,7 @@ import time, os
 
 def run_ai_classification(emails, retry_count=0):
     """
-    This part handles the magic of AI ✨
+    This part handles the magic of AI
     We send a batch of emails to Gemini and get them neatly categorized!
     """
     # Grab the API key from the environment. Falling back to my dev key if missing.
@@ -29,7 +29,7 @@ def run_ai_classification(emails, retry_count=0):
     ]
 
     for email_data in emails:
-        # Trimming text so we don't blow up the prompt size. Smart formatting! 😎
+        # Trimming text so we don't blow up the prompt size. Smart formatting!
         sender = (email_data.get('sender_id') or '')[:60]
         title = (email_data.get('title') or '')[:60]
         body = (email_data.get('body') or '')[:200]

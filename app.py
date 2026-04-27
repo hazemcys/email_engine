@@ -94,7 +94,7 @@ except ImportError:
     def get_stage_icon(stage_num):
         return f"<h3>Stage {stage_num}</h3>"
 
-st.title("🚀 Email Categorization Engine")
+st.title("Email Categorization Engine")
 st.write("Upload Your MBOX or CSV File To Start The Classification.")
 
 # UI Settings for AI
@@ -121,7 +121,7 @@ if uploaded_file is not None:
             
             # 2. Optional AI Classification
             if all_rows and enable_ai:
-                st.info("🧠 AI Classification active. Processing in batches...")
+                st.info("AI Classification active. Processing in batches...")
                 batch_size = 20
                 ai_failed = False
                 for i in range(0, len(all_rows), batch_size):
@@ -131,7 +131,7 @@ if uploaded_file is not None:
                     results = run_ai_classification(chunk)
                     
                     if results and results[0] == "RATE_LIMIT_HIT":
-                        st.warning("⚠️ AI Rate Limit Hit! Continuing without AI.")
+                        st.warning("AI Rate Limit Hit! Continuing without AI.")
                         ai_failed = True
                         continue
 
@@ -142,7 +142,7 @@ if uploaded_file is not None:
 
             # 3. Pipeline Filtering
             if not all_rows:
-                st.error("❌ No data found! Please ensure you uploaded a valid **MBOX** or **CSV** file with standard headers.")
+                st.error("No data found! Please ensure you uploaded a valid **MBOX** or **CSV** file with standard headers.")
                 if 'all_results' in st.session_state:
                     del st.session_state['all_results']
             else:
@@ -156,18 +156,18 @@ if uploaded_file is not None:
                         df[col] = None
                 
                 st.session_state['all_results'] = df
-                st.success("✅ Done! Emails classified successfully.")
+                st.success("Done! Emails classified successfully.")
 
     if 'all_results' in st.session_state:
         all_results = st.session_state['all_results']
         
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-            "1️⃣ Most Occurred",
-            "2️⃣ Legal Keywords",
-            "3️⃣ Report Pattern",
-            "4️⃣ Detected Phones",
-            "5️⃣ Unprocessed",
-            "📈 Intelligence Summary"
+            "1. Most Occurred",
+            "2. Legal Keywords",
+            "3. Report Pattern",
+            "4. Detected Phones",
+            "5. Unprocessed",
+            "Intelligence Summary"
         ])
         
         with tab1:
@@ -211,7 +211,7 @@ if uploaded_file is not None:
                 st.download_button("Download Stage 5", df5.to_csv(index=False).encode('utf-8'), "unprocessed.csv", "text/csv")
 
         with tab6:
-            st.markdown("<h3 style='margin-bottom: 25px;'>📊 Data Intelligence Dashboard</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='margin-bottom: 25px;'>Data Intelligence Dashboard</h3>", unsafe_allow_html=True)
             
             # --- TOP METRICS ---
             total = len(all_results)
@@ -269,7 +269,7 @@ if uploaded_file is not None:
             st.markdown("<br>", unsafe_allow_html=True)
             full_csv = all_results.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="📥 DOWNLOAD MASTER INTELLIGENCE REPORT",
+                label="DOWNLOAD MASTER INTELLIGENCE REPORT",
                 data=full_csv,
                 file_name="Intelligence_Report.csv",
                 mime="text/csv",

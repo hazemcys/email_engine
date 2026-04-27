@@ -172,7 +172,7 @@ def load_and_parse(mbox_path):
     all_parsed_rows = []
     phone_tracker = Counter() # Huge brain way to count occurrences fast!
 
-    print(f"🚀 Firing up the engine for {mbox_path} ... hold tight!")
+    print(f"Firing up the engine for {mbox_path} ... hold tight!")
 
     for msg in tqdm(engine_mailbox, desc="Crushing emails"):
         from_raw = msg.get('from', '') or ''
@@ -303,7 +303,7 @@ def write_outputs(outdir, all_rows, phone_tracker, spam_threshold):
     stage4_other_phones = [] # Anything else with a number
     stage5_unprocessed = []  # No phones, no legal stuff (basically useless to us)
 
-    print("⚙️ Running the magic pipeline filters...")
+    print("Running the magic pipeline filters...")
 
     for row in all_rows:
         full_text = row['title'] + ' ' + row['body']
@@ -380,7 +380,7 @@ def write_outputs(outdir, all_rows, phone_tracker, spam_threshold):
         save_excel(stage3_reports, xl('report_entries.xlsx'))
         with open(sq('report_entries_delete.sql'), 'w', encoding='utf-8') as f:
             for r in stage3_reports:
-                # Gotta escape those single quotes so SQL doesn't explode! 💥
+                # Gotta escape those single quotes so SQL doesn't explode!
                 safe_name = str(r['report_name']).replace("'", "''")
                 f.write(f"DELETE FROM `fullNames` WHERE phone = {r['report_phone']} and name = '{safe_name}' LIMIT 1;\n")
                 
@@ -412,21 +412,21 @@ def write_outputs(outdir, all_rows, phone_tracker, spam_threshold):
 
     # --- FINAL WRAP-UP STATS ---
     with open(lg('summary.txt'), 'w', encoding='utf-8') as f:
-        f.write(f"🔥 TOTAL EMAILS DESTROYED: {len(all_rows)}\n")
+        f.write(f"TOTAL EMAILS DESTROYED: {len(all_rows)}\n")
         f.write(f"Stage 1 (Spammers):     {len(stage1_spammers)}\n")
         f.write(f"Stage 2 (Legal stuff):  {len(stage2_legal_stuff)}\n")
         f.write(f"Stage 3 (Reports):      {len(stage3_reports)}\n")
         f.write(f"Stage 4 (Leftovers):    {len(stage4_other_phones)}\n")
         f.write(f"Stage 5 (Useless bins): {len(stage5_unprocessed)}\n")
 
-    print("🎉 Boom! Done. Checkout the files:")
-    print(f"  📊 Excel files -> {xl_dir}")
-    print(f"  💾 SQL Scripts -> {sql_dir}")
-    print(f"  📝 Log Stats   -> {logs_dir}")
+    print("Boom! Done. Checkout the files:")
+    print(f"  Excel files -> {xl_dir}")
+    print(f"  SQL Scripts -> {sql_dir}")
+    print(f"  Log Stats   -> {logs_dir}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Supercharged Email MBOX Processor 🚀')
+    parser = argparse.ArgumentParser(description='Supercharged Email MBOX Processor')
     parser.add_argument('input', help='path to your .mbox file')
     parser.add_argument('--output-dir', default='./output', help='where you want me to save results')
     parser.add_argument('--spam-threshold', type=int, default=5, help='number of hits before considering it spam')
@@ -445,14 +445,14 @@ def main():
 
     # Let's hit the AI if the flag is on!
     if args.classify:
-        print("🧠 Waking up the AI... classifying everything now.")
+        print("Waking up the AI... classifying everything now.")
         batch_size = 20
         for i in range(0, len(all_rows), batch_size):
             chunk = all_rows[i : i + batch_size]
             results = run_ai_classification(chunk)
             
             if results and results[0] == "RATE_LIMIT_HIT":
-                print("⚠️ AI Rate Limit Hit! Continuing without AI.")
+                print("AI Rate Limit Hit! Continuing without AI.")
                 break
 
             for j, category in enumerate(results):

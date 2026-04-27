@@ -1,12 +1,12 @@
-# 🚀 Supercharged Email Engine (v2.0)
+# Supercharged Email Engine (v2.0)
 
-Hey! 👋 Welcome to my custom-built Email Engine. 
+Hey! Welcome to my custom-built Email Engine. 
 
-I designed this system to chew through massive **MBOX** email files insanely fast. It extracts Kuwaiti phone numbers, spots sensitive legal keywords, parses structured reports, and even hooks into **Gemini 2.0 AI** to classify emails automatically. No more manual sorting — the code does all the heavy lifting! 😎
+I designed this system to chew through massive **MBOX** email files insanely fast. It extracts Kuwaiti phone numbers, spots sensitive legal keywords, parses structured reports, and even hooks into **Gemini 2.0 AI** to classify emails automatically. No more manual sorting — the code does all the heavy lifting!
 
 ---
 
-## 📂 How Things Are Organized
+## How Things Are Organized
 Every time you run the engine, it neatly organizes all the results into three awesome subfolders:
 
 ```text
@@ -34,7 +34,7 @@ output/
 
 ---
 
-## 🛠 What's under the hood?
+## What's under the hood?
 
 I picked the best tools for the job to keep things ridiculously efficient:
 
@@ -48,7 +48,7 @@ I picked the best tools for the job to keep things ridiculously efficient:
 
 ---
 
-## ⚡ Let's Run It!
+## Let's Run It!
 
 ### 1. Build the Docker Image
 ```bash
@@ -60,7 +60,7 @@ docker build -t email-engine-app .
 docker run -v $(pwd):/app email-engine-app python engine.py mbox
 ```
 
-### 3. Run with AI Magic ✨
+### 3. Run with AI Magic
 ```bash
 docker run -v $(pwd):/app email-engine-app python engine.py mbox --classify
 ```
@@ -82,7 +82,7 @@ python engine.py <input.mbox> \
 
 ---
 
-## 📊 How the Pipeline Works
+## How the Pipeline Works
 
 I built a strict 5-stage filtering pipeline to make sure no data slips through the cracks:
 
@@ -110,7 +110,7 @@ Parse Emails  →  Translate Arabic Numbers  →  Hunt for Phones!
 
 ---
 
-## 🧠 AI Classification (Optional but Awesome)
+## AI Classification (Optional but Awesome)
 
 If you use `--classify`, the AI goes through every email and tags it as one of these:
 
@@ -129,9 +129,9 @@ If you use `--classify`, the AI goes through every email and tags it as one of t
 
 ---
 
-## ✅ Why this is an Impressive Achievement
+## Why this is an Impressive Achievement
 - Built a custom **MBOX parser** that handles massive 50K+ email files effortlessly.
 - **Smart Arabic numeral translation** baked right into the regex logic.
 - Built a cascading **5-stage data pipeline** exactly to spec.
 - Super clean code with zero messy dependencies.
-- **AI integration** that actually works in production! 🚀
+- **AI integration** that actually works in production!
